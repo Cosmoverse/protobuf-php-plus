@@ -1,0 +1,15 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use cosmicpe\protobuf\Protop;
+
+require $_composer_autoload_path ?? __DIR__ . "/../vendor/autoload.php";
+
+try{
+	exit((new Protop())->run(array_slice($argv, 1)));
+}catch(Throwable $error){
+	fwrite(STDERR, "protop: {$error->getMessage()}\n");
+	exit(1);
+}

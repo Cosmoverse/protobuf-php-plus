@@ -1,0 +1,9 @@
+/.tools export-ignore
+/generated export-ignore
+/vendor export-ignore
+*.proto export-ignore
+/example.php export-ignore
+/verify-types.php export-ignore
+/tests export-ignore
+/.github export-ignore
+/phpunit.xml export-ignore
