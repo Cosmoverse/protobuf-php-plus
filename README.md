@@ -22,7 +22,7 @@ public function setName(string $value): self { /* ... */ }
 ```
 
 ```sh
-composer require cosmoverse/protobuf-php-plus
+composer require cosmicpe/protobuf-php-plus
 vendor/bin/protop --proto_path=proto --php_out=generated proto/messages.proto
 ```
 

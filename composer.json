@@ -1,5 +1,5 @@
 {
-    "name": "cosmoverse/protobuf-php-plus",
+    "name": "cosmicpe/protobuf-php-plus",
     "description": "AST post-processing for generated PHP protobuf classes",
     "type": "library",
     "require": {
