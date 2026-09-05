@@ -1,0 +1,15 @@
+/.tools/
+/vendor/
+/generated/
+*.proto
+!/tests/*.proto
+/example.php
+/verify-types.php
+/.idea/
+/.vscode/
+/.env
+/.env.*
+!/.env.example
+.DS_Store
+Thumbs.db
+/.phpunit.cache/

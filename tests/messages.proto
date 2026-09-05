@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package protop.test;
+
+message Child {
+  string value = 1;
+}
+
+message Sample {
+  string name = 1;
+  optional int64 count = 2;
+  repeated string tags = 3;
+  map<string, Child> children = 4;
+  oneof selection {
+    Child child = 5;
+    bool enabled = 6;
+  }
+}

@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - "master"
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          coverage: none
+
+      - name: Install protoc
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes protobuf-compiler
+
+      - name: Install package from GitHub
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_REPOSITORY: ${{ github.event.pull_request.head.repo.clone_url }}
+          HEAD_REF: ${{ github.head_ref }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            repository="$HEAD_REPOSITORY"
+            ref="dev-$HEAD_REF"
+            commit="$HEAD_SHA"
+          else
+            repository="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"
+            ref="dev-$GITHUB_REF_NAME"
+            commit="$GITHUB_SHA"
+          fi
+
+          mkdir consumer
+          cd consumer
+          composer init --name=cosmoverse/protobuf-php-plus-test --no-interaction
+          composer config github-oauth.github.com "$GH_TOKEN"
+          composer config repositories.protobuf-php-plus vcs "$repository"
+          composer require "cosmoverse/protobuf-php-plus:$ref#$commit" --prefer-source --no-interaction
+          composer require --dev "phpunit/phpunit:^13.3" --no-interaction
+
+      - name: Generate and test
+        run: |
+          mkdir consumer/generated
+          consumer/vendor/bin/protop \
+            --proto_path=tests \
+            --php_out=consumer/generated \
+            tests/messages.proto
+          PROTOP_TEST_PROJECT="$GITHUB_WORKSPACE/consumer" consumer/vendor/bin/phpunit --configuration phpunit.xml
